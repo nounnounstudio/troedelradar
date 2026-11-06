@@ -1,0 +1,8 @@
+   [{
+     "relation": ["delegate_permission/common.handle_all_urls"],
+     "target": {
+       "namespace": "android_app",
+       "package_name": "de.nounstudio.troedelradar",
+       "sha256_cert_fingerprints": ["4E:4D:B5:79:9A:24:B2:2D:FC:29:0A:B5:19:AB:D4:FB:CB:F4:1A:0B:7F:92:8B:CA:A3:FC:D2:A8:B6:19:49:C1"]
+     }
+   }]
