@@ -1,5 +1,5 @@
 // Trödelradar: Die App-Hülle funktioniert auch ohne Netz. Daten vom Server werden nie zwischengespeichert.
-const C='tr-v4',SHELL=['./','index.html','impressum.html','datenschutz.html','nutzungsbedingungen.html','konto-loeschen.html','icon-192.png','icon-512.png','manifest.webmanifest'];
+const C='tr-v5',SHELL=['./','index.html','plz.txt','impressum.html','datenschutz.html','nutzungsbedingungen.html','konto-loeschen.html','icon-192.png','icon-512.png','manifest.webmanifest'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET'||u.origin!==location.origin)return;
