@@ -1,6 +1,9 @@
 // Trödelradar: Die App-Hülle funktioniert auch ohne Netz. Daten vom Server werden nie zwischengespeichert.
-const C='tr-v3',SHELL=['./','index.html','impressum.html','datenschutz.html','nutzungsbedingungen.html','konto-loeschen.html','icon-192.png','icon-512.png','manifest.webmanifest'];
+const C='tr-v4',SHELL=['./','index.html','impressum.html','datenschutz.html','nutzungsbedingungen.html','konto-loeschen.html','icon-192.png','icon-512.png','manifest.webmanifest'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET'||u.origin!==location.origin)return;
  e.respondWith(fetch(e.request.mode==='navigate'?new Request(e.request.url,{cache:'no-cache',credentials:'same-origin'}):e.request).then(r=>{if(r.ok){const cp=r.clone();caches.open(C).then(c=>c.put(e.request.mode==='navigate'?'index.html':e.request,cp))}return r}).catch(()=>caches.match(e.request.mode==='navigate'?'index.html':e.request,{ignoreSearch:true})))});
+
+self.addEventListener('push',e=>{let d={};try{d=e.data?e.data.json():{}}catch(x){d={title:'Trödelradar',body:e.data?e.data.text():''}}e.waitUntil(self.registration.showNotification(d.title||'Trödelradar',{body:d.body||'',icon:'icon-192.png',badge:'icon-192.png',lang:'de',data:{url:d.url||'/'}}))});
+self.addEventListener('notificationclick',e=>{e.notification.close();const url=new URL((e.notification.data&&e.notification.data.url)||'/',self.location.origin).href;e.waitUntil(self.clients.matchAll({type:'window',includeUncontrolled:true}).then(cs=>{for(const c of cs){if(c.url.startsWith(self.location.origin)&&'focus' in c){return c.navigate(url).then(x=>(x||c).focus()).catch(()=>c.focus())}}return self.clients.openWindow(url)}))});
